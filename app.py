@@ -4,6 +4,8 @@ from utils.tokenizer import (
     sub_word_tokenizer, ngram_tokenizer, whitespace_tokenizer, 
     regex_tokenizer, tweet_tokenizer
 )
+from config import APP_NAME, VERSION, AUTHOR, ORG
+
 
 # ===== PAGE CONFIG =====
 st.set_page_config(
@@ -227,18 +229,20 @@ else:
 # ===== FOOTER =====
 st.markdown("---")
 st.markdown(
-    """
+    f"""
     <div style='text-align: center; font-size: 15px;'>
-        <p>💡 <b>Developed by <span style="color:#1E90FF;">Jaiho Labs</span></b></p>
+        <p>💡 <b>Developed by <span style="color:#1E90FF;">{AUTHOR}</span> and <span style="color:#1E90FF;">{ORG}</span></b></p>
         <p>🌐 Empowering AI, Data Science, and NLP learning through open-source innovation.</p>
-        <p>⚙️ Version 1.0 | 📅 © 2025 Jaiho Labs | 🧠 Maintained by the Open-Source Community</p>
+        <p>⚙️ Version {VERSION} | 📅 © 2025 {AUTHOR} and {ORG} | 🧠 Maintained by the Open-Source Community</p>
         <p>
-            🔗 <a href="https://github.com/yourusername/NLP-Lab" target="_blank" style="text-decoration:none; color:#1E90FF;">
+            🔗 <a href="https://github.com/avarshvir/" target="_blank" style="text-decoration:none; color:#1E90FF;">
             GitHub Repository</a> |
-            📬 <a href="mailto:support@jaiholabs.com" style="text-decoration:none; color:#1E90FF;">
+            📬 <a href="mailto:jaihodigital@gmail.com" style="text-decoration:none; color:#1E90FF;">
             Contact</a> |
-            🌍 <a href="https://jaihodigital.com" target="_blank" style="text-decoration:none; color:#1E90FF;">
-            Official Website</a>
+            🌍 <a href="https://jaiho-labs.onrender.com" target="_blank" style="text-decoration:none; color:#1E90FF;">
+            Official Website</a> |
+            🧵 <a href="#" target="_blank" style="text-decoration:none; color:#1E90FF;">
+            Important Links</a>
         </p>
     </div>
     """,
