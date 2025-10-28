@@ -104,7 +104,7 @@ Developed by **Arshvir**, NLP Lab is designed for students, developers, and rese
 | **Frontend** | Streamlit |
 | **Backend** | Python |
 | **Core Libraries** | NLTK, spaCy, Transformers, Scikit-learn, TensorFlow, PyTorch |
-| **Version** | 1.0.0 |
+| **Version** | 1.0.1 |
 
 ---
 
