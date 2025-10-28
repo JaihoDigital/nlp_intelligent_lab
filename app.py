@@ -5,6 +5,8 @@ from utils.tokenizer import (
     regex_tokenizer, tweet_tokenizer
 )
 from config import APP_NAME, VERSION, AUTHOR, ORG
+import nltk
+nltk.data.path.append('./nltk_data')
 
 
 # ===== PAGE CONFIG =====
