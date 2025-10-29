@@ -1,8 +1,11 @@
 import nltk
-from nltk.tokenize import word_tokenize
-nltk.download('punkt_tab')
+
+#nltk.download('punkt_tab')
 
 text = "Hi, Arsh I am Arsh :)"
-words = word_tokenize(text)
 
-print(words)
+nltk.download('wordnet', quiet=True)
+nltk.download('omw-1.4', quiet=True)
+nltk.download('averaged_perceptron_tagger', quiet=True)
+nltk.download('punkt', quiet=True)
+print("Download Succesfully")

@@ -4,6 +4,7 @@ from utils.tokenizer import (
     sub_word_tokenizer, ngram_tokenizer, whitespace_tokenizer, 
     regex_tokenizer, tweet_tokenizer
 )
+from utils.lemmatizer import single_lemmatizer, mul_lemmatizer
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
 nltk.data.path.append('./nltk_data')
@@ -223,6 +224,100 @@ if phase == "Text Preprocessing" and current_module == "Tokenizer":
         "🔗 View More Tokenization Techniques on GitHub ↗","https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/1_tokenization"
     )
 
+if phase == "Text Preprocessing" and current_module == "Lemmatization":
+    st.subheader("📝 Text Input")
+    text = st.text_area(
+        "Enter your text below:",
+        "I am running quickly. He went home yesterday.",
+        height=100  # Better example with context!
+    )
+
+    col1, col2 = st.columns(2)
+    def lemmatizer_ui(column, lemm_id):
+        with column:
+            lemmatizer_option = st.selectbox(
+                f"Select Lemmatizer {lemm_id}",
+                ["Select...", "Single Lemmatizer (spaCy)", "Single Lemmatizer (NLTK)", "Multiple Lemmatizer (spaCy)"], 
+                index=0,
+                key=f"lemm_{lemm_id}"
+            )
+            use_nltk = st.toggle("🔄 Use NLTK Fallback (better for verbs!)", key=f"nltk_{lemm_id}")
+            
+            if lemmatizer_option == "Select...":
+                st.info("Select a lemmatizer to begin.")
+                return
+            
+            try:
+                if "Single Lemmatizer (spaCy)" in lemmatizer_option:
+                    lemmas = single_lemmatizer(text, use_nltk_fallback=False)
+                elif "Single Lemmatizer (NLTK)" in lemmatizer_option:
+                    lemmas = single_lemmatizer(text, use_nltk_fallback=True)
+                elif "Multiple Lemmatizer (spaCy)" in lemmatizer_option:
+                    lemma_details = mul_lemmatizer(text)
+                    st.success(f"✅ Processed {len(lemma_details)} tokens")
+                    st.dataframe(lemma_details, use_container_width=True, hide_index=True)
+                    return  # Early return for multi
+                
+                st.success(f"✅ Lemmas: {' | '.join(lemmas)}")
+                st.json({"Original": text.split(), "Lemmas": lemmas})
+                
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+    lemmatizer_ui(col1, "A")
+    lemmatizer_ui(col2, "B")
+
+    # ... tabs ...
+    tab1, tab2 = st.tabs(["📘 Concept", "💻 Code"])
+
+    with tab1:
+        st.markdown("""
+        ### 🔹 Lemmatization
+        **Lemmatization** reduces words to their **base/dictionary form** (lemma) considering **context/POS**.
+        - "Running" (VERB) → "run"
+        - "Running" (NOUN, e.g., "running business") → "running"
+        - Better than stemming (no invalid words like "runn").
+
+        #### spaCy vs NLTK:
+        | Feature | spaCy | NLTK |
+        |---------|--------|------|
+        | Speed | ⚡ Fast (pipeline) | Slower |
+        | Context | Excellent (needs sentences) | Good (needs manual POS) |
+        | Verbs (isolated) | ❌ Often fails | ✅ Reliable<grok-card data-id="01c301" data-type="citation_card"></grok-card> |
+
+        **Tip**: Use sentences for best spaCy results!
+        """)
+
+    with tab2:
+        st.code("""
+import spacy
+from nltk.stem import WordNetLemmatizer
+import nltk
+
+nlp = spacy.load("en_core_web_sm")
+nltk_lemmatizer = WordNetLemmatizer()
+
+# spaCy (context-aware)
+doc = nlp("I am running. He went home.")
+lemmas = [t.lemma_ for t in doc if not t.is_punct]
+
+# NLTK (POS-aware)
+def nltk_lemma(text):
+    tokens = nltk.word_tokenize(text)
+    return [nltk_lemmatizer.lemmatize(w, nltk.pos_tag([w])[0][1][0].upper()) 
+            for w in tokens]
+
+print(lemmas)  # ['I', 'be', 'run', 'He', 'go', 'home']
+        """, language="python")
+
+    st.link_button(
+        "🔗 spaCy Lemmatizer Docs ↗️", "https://spacy.io/usage/linguistic-features#lemmatization"
+    )
+
+    # Add GitHub link button
+    st.link_button(
+        "🔗 View More Tokenization Techniques on GitHub ↗","https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/1_tokenization"
+    )
     
 else:
     st.info("🚧 Module coming soon! Work in progress...")
@@ -250,5 +345,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-
