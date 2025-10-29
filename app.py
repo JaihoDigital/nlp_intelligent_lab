@@ -182,7 +182,7 @@ if phase == "Text Preprocessing" and current_module == "Tokenizer":
     tokenizer_ui(col2, "B")
 
     st.markdown("---")
-    tab1, tab2 = st.tabs(["📘 Concept", "💻 Code"])
+    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 Tokenization Other Sources"])
 
     with tab1:
         st.markdown("""
@@ -218,13 +218,23 @@ if phase == "Text Preprocessing" and current_module == "Tokenizer":
     # Word Tokens:
     # ['Tokenization', 'is', 'the', 'first', 'step', 'in', 'NLP', '!']
     """, language="python")
-
-    # Add GitHub link button
+    
+    with tab3:
+        st.link_button(
+            "NLTK Tokenize Docs ↗","https://www.nltk.org/api/nltk.tokenize.html"
+        )
+        st.link_button(
+            "Spacy Tokenize Docs ↗","https://spacy.io/api/tokenizer"
+        )
+        st.link_button(
+            "Tokenization Means ↗","https://www.geeksforgeeks.org/nlp/nlp-how-tokenizing-text-sentence-words-works/"
+        )
+    
     st.link_button(
         "🔗 View More Tokenization Techniques on GitHub ↗","https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/1_tokenization"
     )
 
-if phase == "Text Preprocessing" and current_module == "Lemmatization":
+elif phase == "Text Preprocessing" and current_module == "Lemmatization":
     st.subheader("📝 Text Input")
     text = st.text_area(
         "Enter your text below:",
@@ -232,12 +242,12 @@ if phase == "Text Preprocessing" and current_module == "Lemmatization":
         height=100  # Better example with context!
     )
 
-    col1, col2 = st.columns(2)
+    col1, = st.columns(1)
     def lemmatizer_ui(column, lemm_id):
         with column:
             lemmatizer_option = st.selectbox(
                 f"Select Lemmatizer {lemm_id}",
-                ["Select...", "Single Lemmatizer (spaCy)", "Single Lemmatizer (NLTK)", "Multiple Lemmatizer (spaCy)"], 
+                ["Select...", "Single Lemmatizer (spaCy)", "Multiple Lemmatizer (spaCy)"], 
                 index=0,
                 key=f"lemm_{lemm_id}"
             )
@@ -250,8 +260,8 @@ if phase == "Text Preprocessing" and current_module == "Lemmatization":
             try:
                 if "Single Lemmatizer (spaCy)" in lemmatizer_option:
                     lemmas = single_lemmatizer(text, use_nltk_fallback=False)
-                elif "Single Lemmatizer (NLTK)" in lemmatizer_option:
-                    lemmas = single_lemmatizer(text, use_nltk_fallback=True)
+                #elif "Single Lemmatizer (NLTK)" in lemmatizer_option:
+                #    lemmas = single_lemmatizer(text, use_nltk_fallback=True)
                 elif "Multiple Lemmatizer (spaCy)" in lemmatizer_option:
                     lemma_details = mul_lemmatizer(text)
                     st.success(f"✅ Processed {len(lemma_details)} tokens")
@@ -264,11 +274,11 @@ if phase == "Text Preprocessing" and current_module == "Lemmatization":
             except Exception as e:
                 st.error(f"Error: {str(e)}")
 
-    lemmatizer_ui(col1, "A")
-    lemmatizer_ui(col2, "B")
+    lemmatizer_ui(col1, "-")
+    #lemmatizer_ui(col2, "B")
 
     # ... tabs ...
-    tab1, tab2 = st.tabs(["📘 Concept", "💻 Code"])
+    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 Lemmatization other sources"])
 
     with tab1:
         st.markdown("""
@@ -283,7 +293,7 @@ if phase == "Text Preprocessing" and current_module == "Lemmatization":
         |---------|--------|------|
         | Speed | ⚡ Fast (pipeline) | Slower |
         | Context | Excellent (needs sentences) | Good (needs manual POS) |
-        | Verbs (isolated) | ❌ Often fails | ✅ Reliable<grok-card data-id="01c301" data-type="citation_card"></grok-card> |
+        | Verbs (isolated) | ❌ Often fails | ✅ Reliable |
 
         **Tip**: Use sentences for best spaCy results!
         """)
@@ -310,14 +320,16 @@ def nltk_lemma(text):
 print(lemmas)  # ['I', 'be', 'run', 'He', 'go', 'home']
         """, language="python")
 
+    with tab3: 
+        st.link_button("NLTK Lemmatizer Docs ↗", "https://www.nltk.org/api/nltk.stem.WordNetLemmatizer.html")
+        st.link_button("Spacy Lemmatizer Docs ↗", "https://spacy.io/api/lemmatizer")
+        st.link_button("Lemmatizer Means ↗", "https://www.geeksforgeeks.org/python/python-lemmatization-with-nltk/")
+        
+
     st.link_button(
-        "🔗 spaCy Lemmatizer Docs ↗️", "https://spacy.io/usage/linguistic-features#lemmatization"
+        "🔗 View More Lemmatization Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/2_stemming_and_lemmatization"
     )
 
-    # Add GitHub link button
-    st.link_button(
-        "🔗 View More Tokenization Techniques on GitHub ↗","https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/1_tokenization"
-    )
     
 else:
     st.info("🚧 Module coming soon! Work in progress...")

@@ -11,7 +11,7 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)](https://streamlit.io)
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.1-green.svg?style=for-the-badge)](https://github.com/avarshvir/nlp-intelligent-lab)
+[![Version](https://img.shields.io/badge/Version-1.2-green.svg?style=for-the-badge)](https://github.com/avarshvir/nlp-intelligent-lab)
 
 </div>
 
@@ -104,7 +104,7 @@ Developed by **Arshvir**, NLP Lab is designed for students, developers, and rese
 | **Frontend** | Streamlit |
 | **Backend** | Python |
 | **Core Libraries** | NLTK, spaCy, Transformers, Scikit-learn, TensorFlow, PyTorch |
-| **Version** | 1.1 |
+| **Version** | 1.2 |
 
 ---
 
