@@ -4,6 +4,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet
 from nltk import pos_tag, word_tokenize
 import os
+import sys
 
 
 # NLTK Lemmatizer instance
