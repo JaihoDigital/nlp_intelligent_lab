@@ -5,6 +5,7 @@ from utils.tokenizer import (
     regex_tokenizer, tweet_tokenizer
 )
 from utils.lemmatizer import single_lemmatizer, mul_lemmatizer
+from utils. stemming import porterStemmer, snowballStemmer, lancasterStemmer
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
 nltk.data.path.append('./nltk_data')
@@ -330,6 +331,105 @@ print(lemmas)  # ['I', 'be', 'run', 'He', 'go', 'home']
         "🔗 View More Lemmatization Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/2_stemming_and_lemmatization"
     )
 
+elif phase == "Text Preprocessing" and current_module == "Stemming":
+    st.subheader("📝 Text Input")
+    text = st.text_area(
+        "Enter your word below:",
+        "running",
+        height=100  # Better example with context!
+    )
+
+    col1, = st.columns(1)
+    def stemmer_ui(column, stem_id):
+        with column:
+            stemmer_option = st.selectbox(
+                f"Select Stemmer {stem_id}",
+                ["Select...", "Porter Stemmer", "Snowball Stemmer", "Lancaster Stemmer"], 
+                index=0,
+                key=f"lemm_{stem_id}"
+            )
+            #use_nltk = st.toggle("🔄 Use NLTK Fallback (better for verbs!)", key=f"nltk_{lemm_id}")
+            
+            if stemmer_option == "Select...":
+                st.info("Select a stemmer to begin.")
+                return
+            
+            try:
+                if "Porter Stemmer" in stemmer_option:
+                    p_stem = porterStemmer(text)
+                    st.success(f"✅ Porter Stem: {''.join(p_stem)}")
+                    st.json({"Original": text.split(), "Stem": p_stem})
+                elif "Snowball Stemmer" in stemmer_option:
+                    s_stem = snowballStemmer(text)
+                    st.success(f"✅ Snowball Stem: {''.join(s_stem)}")
+                elif "Lancaster Stemmer" in stemmer_option:
+                    l_stem = lancasterStemmer(text)
+                    st.success(f"✅ Lancaster Stem: {''.join(l_stem)}")
+                
+                
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+    stemmer_ui(col1, "-")
+    #lemmatizer_ui(col2, "B")
+
+    # ... tabs ...
+    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 Stemming other sources"])
+
+    with tab1:
+        st.markdown("""
+        ### 🔹 Stemming
+        **Stemming** reduces words to their **root form** by chopping off suffixes/prefixes using rules.
+        - "Running" → "run"
+        - "Happily" → "happi"
+        - "Going" → "go            
+        - Faster than lemmatization but may produce non-dictionary words.
+
+        #### Porter vs Snowball vs Lancaster:
+        | Stemmer | Aggressiveness | Speed | Quality |
+        |---------|----------------|-------|---------|
+        | Porter | Moderate | Fast | Good |
+        | Snowball | Moderate | Fast | Better (Porter 2.0) |
+        | Lancaster | Very Aggressive | Fast | Over-stemming |
+
+        **Tip**: Use Snowball for best balance of speed and accuracy!
+        """)
+
+    with tab2:
+        st.code("""
+from nltk.stem import PorterStemmer, SnowballStemmer, LancasterStemmer
+from nltk.tokenize import word_tokenize
+
+# Initialize stemmers
+porter = PorterStemmer()
+snowball = SnowballStemmer("english")
+lancaster = LancasterStemmer()
+
+def stem_sentence(text, stemmer):
+    tokens = word_tokenize(text)
+    return [stemmer.stem(token) for token in tokens]
+
+text = "Running happily going studies"
+
+# Compare stemmers
+porter_stems = stem_sentence(text, porter)
+snowball_stems = stem_sentence(text, snowball) 
+lancaster_stems = stem_sentence(text, lancaster)
+
+print("Porter:", porter_stems)    # ['run', 'happili', 'go', 'studi']
+print("Snowball:", snowball_stems) # ['run', 'happili', 'go', 'studi']
+print("Lancaster:", lancaster_stems) # ['run', 'happy', 'go', 'study']
+""", language="python")
+
+    with tab3: 
+        st.link_button("NLTK Stemming Docs ↗", "https://www.nltk.org/howto/stem.html")
+        st.link_button("Stemming Resources ↗", "https://www.analyticsvidhya.com/blog/2021/11/an-introduction-to-stemming-in-natural-language-processing/")
+        st.link_button("Stemming Means ↗", "https://www.geeksforgeeks.org/machine-learning/introduction-to-stemming/")
+        
+
+    st.link_button(
+        "🔗 View More Stemming Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/2_stemming_and_lemmatization"
+    )
     
 else:
     st.info("🚧 Module coming soon! Work in progress...")
