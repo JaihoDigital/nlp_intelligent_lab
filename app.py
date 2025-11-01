@@ -28,16 +28,17 @@ with st.sidebar:
         "Select NLP Phase:",
         [
             "Text Preprocessing",
+            "Feature Extraction",
             "Syntax & Parsing",
             "Semantic Analysis",
+            "Basic ML Models & Classification",
+            "Advanced Sequence Labelling",
             "Information Extraction",
-            "Text Classification & Sequence Labelling",
-            "Feature Extraction",
-            "Advanced Sequence Modeling & Deep Learning",
+            "Transformers & Modern NLP",
             "Language Generation",
-            "Speech Processing",
             "Q/A Systems",
             "Dialogue Systems",
+            "Speech Processing",
             "Sentiment & Emotional Analysis",
             "Projects"
         ],
@@ -69,29 +70,29 @@ modules_by_phase = {
         "Steps in TP", "Tokenizer", "Lemmatization", "Stemming",
         "Stopword Removal", "Text Normalization"
     ],
+    "Feature Extraction": [
+        "Bag of Words", "TF-IDF", "Word Embedding"
+    ],
     "Syntax & Parsing": [
         "POS Tagging", "Dependency Parsing", "Constituency Parsing"
     ],
     "Semantic Analysis": [
         "NER", "Word Sense Disambiguation", "Coreference Resolution"
     ],
+    "Basic ML Models & Classification": [
+        "Text Classification (Naive Bayes, SVM)", "Sentiment Analysis (basic)", "Spam Detection"
+    ],
+    "Advanced Sequence Labelling": [
+        "RNN", "LSTM", "GRU","CNN for Text", "Seq2Seq Models"
+    ],
     "Information Extraction": [
-        "Entity Extraction", "Relation Extraction"
+        "Entity Extraction", "Relation Extraction", "Event Extraction"
     ],
-    "Text Classification & Sequence Labelling": [
-        "Sentiment Analysis", "Topic Modeling", "Spam Detection"
-    ],
-    "Feature Extraction": [
-        "Bag of Words / TF-IDF", "Word Embedding"
-    ],
-    "Advanced Sequence Modeling & Deep Learning": [
-        "N-grams", "Seq2Seq", "RNN / LSTM / GRU", "CNN", "Transformers"
+    "Transformers & Modern NLP": [
+        "BERT-GPT-T5 architecture", "Transformer-based embeddings", "Pre-trained language models"
     ],
     "Language Generation": [
         "Machine Translation", "Text Summarization", "Text Generation"
-    ],
-    "Speech Processing": [
-        "Speech Recognition", "Text-to-Speech (TTS)"
     ],
     "Q/A Systems": [
         "Retrieval-Based Q/A", "Generative Q/A"
@@ -99,8 +100,11 @@ modules_by_phase = {
     "Dialogue Systems": [
         "Chatbots", "Virtual Assistants"
     ],
+    "Speech Processing": [
+        "Speech Recognition", "Text-to-Speech (TTS)"
+    ],
     "Sentiment & Emotional Analysis": [
-        "Emotion Detection", "Opinion Mining"
+        "Topic Modeling","Emotion Detection", "Opinion Mining"
     ],
     "Projects": [
         "Mini Projects", "Minor Projects", "Major Projects", "Capstone Projects"
