@@ -7,6 +7,7 @@ from utils.tokenizer import (
 from utils.lemmatizer import single_lemmatizer, mul_lemmatizer
 from utils.stemming import porterStemmer, snowballStemmer, lancasterStemmer
 from utils.stopworder import stop_worder
+from utils.text_norm import lower_case, upper_case, capitalize_case
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
 nltk.data.path.append('./nltk_data')
@@ -37,7 +38,8 @@ with st.sidebar:
             "Speech Processing",
             "Q/A Systems",
             "Dialogue Systems",
-            "Sentiment & Emotional Analysis"
+            "Sentiment & Emotional Analysis",
+            "Projects"
         ],
         index=0
     )
@@ -64,7 +66,7 @@ st.markdown(f"### 📘 Current Phase: {phase}")
 # Define modules by phase
 modules_by_phase = {
     "Text Preprocessing": [
-        "Tokenizer", "Lemmatization", "Stemming",
+        "Steps in TP", "Tokenizer", "Lemmatization", "Stemming",
         "Stopword Removal", "Text Normalization"
     ],
     "Syntax & Parsing": [
@@ -99,6 +101,9 @@ modules_by_phase = {
     ],
     "Sentiment & Emotional Analysis": [
         "Emotion Detection", "Opinion Mining"
+    ],
+    "Projects": [
+        "Mini Projects", "Minor Projects", "Major Projects", "Capstone Projects"
     ]
 }
 
@@ -114,7 +119,17 @@ current_module = st.radio(
 st.markdown("---")
 
 # ===== MODULE LOGIC =====
-if phase == "Text Preprocessing" and current_module == "Tokenizer":
+# Text Preprocessing
+if phase == "Text Preprocessing" and current_module == "Steps in TP":
+    st.markdown("""
+- **Text Normalization:** Case Normalization, Punctuation Removal, Number Handling, Whitespace, Contaction Expansion, Special Character Handling.
+- **Tokenization:** Word Tokenization, Sentence Tokenization, Sub-word Tokenization, N-gram Tokenization, etc.
+- **Stopword Removal:** NLTK based or custom based.
+- **Stemming and Lemmatization:** Porter Stemmer, Snowball Stemmer, Lancaster Stemmer, Lemmatizer.
+            """)
+    st.link_button("Text Preprocessing Notes ↗","#")
+
+elif phase == "Text Preprocessing" and current_module == "Tokenizer":
     st.subheader("📝 Text Input")
     text = st.text_area(
         "Enter your text below:",
@@ -444,7 +459,7 @@ elif phase == "Text Preprocessing" and current_module == "Stopword Removal":
     def stopword_ui(column, stop_id):
         with column:
             stopword_option = st.selectbox(
-                f"Select Stemmer {stop_id}",
+                f"Select Stopword {stop_id}",
                 ["Select...", "NLTK Stopword", "Custom Stopword"], 
                 index=0,
                 key=f"lemm_{stop_id}"
@@ -471,63 +486,276 @@ elif phase == "Text Preprocessing" and current_module == "Stopword Removal":
     #lemmatizer_ui(col2, "B")
 
     # ... tabs ...
-    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 Stemming other sources"])
+    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 Stopword Resources"])
 
     with tab1:
         st.markdown("""
-        ### 🔹 Stemming
-        **Stemming** reduces words to their **root form** by chopping off suffixes/prefixes using rules.
-        - "Running" → "run"
-        - "Happily" → "happi"
-        - "Going" → "go            
-        - Faster than lemmatization but may produce non-dictionary words.
+        ### 🔹 Stopword Removal
+        **Stopwords** are common words that carry little meaningful information but appear frequently in text.
+        - "the", "is", "in", "and", "to", "of"
+        - Removing them improves processing efficiency and focuses on important content words
+        - Reduces noise in text analysis and machine learning models
 
-        #### Porter vs Snowball vs Lancaster:
-        | Stemmer | Aggressiveness | Speed | Quality |
-        |---------|----------------|-------|---------|
-        | Porter | Moderate | Fast | Good |
-        | Snowball | Moderate | Fast | Better (Porter 2.0) |
-        | Lancaster | Very Aggressive | Fast | Over-stemming |
+        #### Common Stopword Libraries:
+        | Library | Words | Languages | Use Case |
+        |---------|-------|-----------|----------|
+        | NLTK | 179 | English | General purpose, education |
+        | spaCy | 326+ | Multiple | Production applications |
+        | Scikit-learn | 318 | English | Machine learning tasks |
+        | Custom | Variable | Any | Domain-specific applications |
+        
+        #### When to Remove Stopwords:
+        ✅ **Text Classification** - Improves feature quality  
+        ✅ **Topic Modeling** - Focuses on meaningful terms  
+        ✅ **Search Engines** - Reduces index size  
+        ❌ **Sentiment Analysis** - May remove important context words  
+        ❌ **Language Translation** - Grammar structure matters  
 
-        **Tip**: Use Snowball for best balance of speed and accuracy!
+        **Tip**: Consider your use case! Sometimes stopwords carry important contextual information.
         """)
 
     with tab2:
         st.code("""
-from nltk.stem import PorterStemmer, SnowballStemmer, LancasterStemmer
+import nltk
+from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+import spacy
 
-# Initialize stemmers
-porter = PorterStemmer()
-snowball = SnowballStemmer("english")
-lancaster = LancasterStemmer()
+# Download required NLTK data
+nltk.download('stopwords')
+nltk.download('punkt')
 
-def stem_sentence(text, stemmer):
-    tokens = word_tokenize(text)
-    return [stemmer.stem(token) for token in tokens]
+def remove_stopwords_nltk(text):
+    \"\"\"Remove stopwords using NLTK\"\"\"
+    stop_words = set(stopwords.words('english'))
+    word_tokens = word_tokenize(text)
+    filtered_text = [word for word in word_tokens if word.lower() not in stop_words]
+    return filtered_text
 
-text = "Running happily going studies"
+def remove_stopwords_spacy(text):
+    \"\"\"Remove stopwords using spaCy\"\"\"
+    nlp = spacy.load("en_core_web_sm")
+    doc = nlp(text)
+    filtered_text = [token.text for token in doc if not token.is_stop]
+    return filtered_text
 
-# Compare stemmers
-porter_stems = stem_sentence(text, porter)
-snowball_stems = stem_sentence(text, snowball) 
-lancaster_stems = stem_sentence(text, lancaster)
+def remove_custom_stopwords(text, custom_stopwords):
+    \"\"\"Remove custom defined stopwords\"\"\"
+    word_tokens = word_tokenize(text)
+    filtered_text = [word for word in word_tokens if word.lower() not in custom_stopwords]
+    return filtered_text
 
-print("Porter:", porter_stems)    # ['run', 'happili', 'go', 'studi']
-print("Snowball:", snowball_stems) # ['run', 'happili', 'go', 'studi']
-print("Lancaster:", lancaster_stems) # ['run', 'happy', 'go', 'study']
+# Example usage
+text = "This is a sample sentence demonstrating stopword removal techniques"
+
+# NLTK Stopwords
+nltk_result = remove_stopwords_nltk(text)
+print("NLTK Result:", nltk_result)
+
+# Custom Stopwords
+custom_stops = ['this', 'is', 'a', 'demonstrating']
+custom_result = remove_custom_stopwords(text, custom_stops)
+print("Custom Result:", custom_result)
+
+# spaCy Stopwords (requires spaCy model)
+# spacy_result = remove_stopwords_spacy(text)
+# print("spaCy Result:", spacy_result)
 """, language="python")
 
     with tab3: 
-        st.link_button("NLTK Stemming Docs ↗", "https://www.nltk.org/howto/stem.html")
-        st.link_button("Stemming Resources ↗", "https://www.analyticsvidhya.com/blog/2021/11/an-introduction-to-stemming-in-natural-language-processing/")
-        st.link_button("Stemming Means ↗", "https://www.geeksforgeeks.org/machine-learning/introduction-to-stemming/")
+        st.link_button("NLTK Stopwords Documentation ↗", "https://www.nltk.org/howto/corpus.html#stopwords")
+        st.link_button("Stopword Analysis Tutorial ↗", "https://www.analyticsvidhya.com/blog/2019/08/how-to-remove-stopwords-text-normalization-nltk-spacy-gensim-python/")
+        st.link_button("Custom Stopwords Implementation ↗", "https://www.geeksforgeeks.org/removing-stop-words-nltk-python/")
         
 
     st.link_button(
-        "🔗 View More Stemming Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/2_stemming_and_lemmatization"
+        "🔗 View More Stopwords Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/3_stopwords_removal"
     )
 
+elif phase == "Text Preprocessing" and current_module == "Text Normalization":
+    st.subheader("📝 Text Input")
+    text = st.text_area(
+        "Enter your word below:",
+        "My name is Arshvir. How are you dear?",
+        height=100  # Better example with context!
+    )
+
+    col1, = st.columns(1)
+    def textnorm_ui(column, norm_id):
+        with column:
+            textnorm_option = st.selectbox(
+                f"Select Text Normalizer {norm_id}",
+                ["Select...", "Lower case", "Upper case", "Capitalize case", "Remove Punctuation", 
+                 "Remove Numbers", "Remove Extra Spaces", "Advanced Cleaning"], 
+                index=0,
+                key=f"lemm_{norm_id}"
+            )
+            #use_nltk = st.toggle("🔄 Use NLTK Fallback (better for verbs!)", key=f"nltk_{lemm_id}")
+            
+            if textnorm_option == "Select...":
+                st.info("Select a technique to begin.")
+                return
+            
+            try:
+                if "Lower case" in textnorm_option:
+                    lower_text = lower_case(text)
+                    st.info(f"➡️ Original Text: {text}")
+                    st.success(f"✅ Lower Case Text: {''.join(lower_text)}")
+                    st.json({"Original": text.split(), "Text": lower_text})
+                
+                elif "Upper case" in textnorm_option:
+                    upper_text = upper_case(text)
+                    st.info(f"➡️ Original Text: {text}")
+                    st.success(f"✅ Upper Case Text: {''.join(upper_text)}")
+                    st.json({"Original": text.split(), "Text": upper_text})
+                
+                elif "Capitalize case" in textnorm_option:
+                    capitalize_text = capitalize_case(text)
+                    st.info(f"➡️ Original Text: {text}")
+                    st.success(f"✅ Capitalize Case Text: {''.join(capitalize_text)}")
+                    st.json({"Original": text.split(), "Text": capitalize_text})
+                
+                    
+
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+    textnorm_ui(col1, "-")
+    #lemmatizer_ui(col2, "B")
+
+    # ... tabs ...
+    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 Normalization Resources"])
+
+    with tab1:
+        st.markdown("""
+        ### 🔹 Text Normalization
+        **Text Normalization** converts text into a consistent, canonical form for processing.
+        It's crucial for preparing text data for NLP tasks and machine learning models.
+        
+        #### Core Normalization Techniques:
+        **1. Case Normalization**
+        - **Lowercase**: "Hello World" → "hello world" (most common in NLP)
+        - **Uppercase**: "important" → "IMPORTANT" (for emphasis/acronyms)
+        - **Capitalize**: "john smith" → "John smith" (proper nouns)
+
+        **2. Noise Removal**
+        - **Punctuation**: "Hello!" → "Hello" (removes !, ., ,, ?, etc.)
+        - **Numbers**: "Version 2.0" → "Version " (removes digits)
+        - **Special Characters**: "Café" → "Caf" (removes accents/symbols)
+        - **Extra Whitespace**: "Hello   world" → "Hello world"
+
+        **3. Advanced Techniques**
+        - **Accent Removal**: "naïve" → "naive"
+        - **Contraction Expansion**: "I'm" → "I am"
+        - **Unicode Normalization**: Standardizes character encoding
+
+        #### Impact on NLP Tasks:
+        | Task | Recommended Approach | Why |
+        |------|---------------------|------|
+        | Search/Retrieval | Lowercase + Punctuation Removal | Case-insensitive matching |
+        | Sentiment Analysis | Keep punctuation | ! and ? carry sentiment |
+        | Text Classification | Lowercase + Basic Cleaning | Consistent features |
+        | Chatbots | Keep case + selective cleaning | Natural conversation |
+
+        **Pro Tip**: Always consider your specific use case before normalizing!
+        """)
+
+    with tab2:
+        st.code("""
+import re
+import string
+import unicodedata
+
+def to_lowercase(text):
+    \"\"\"Convert text to lowercase\"\"\"
+    return text.lower()
+
+def to_uppercase(text):
+    \"\"\"Convert text to uppercase\"\"\"
+    return text.upper()
+
+def capitalize_text(text):
+    \"\"\"Capitalize the first character of text\"\"\"
+    return text.capitalize()
+
+def remove_punctuation(text):
+    \"\"\"Remove all punctuation marks\"\"\"
+    return text.translate(str.maketrans('', '', string.punctuation))
+
+def remove_numbers(text):
+    \"\"\"Remove all numerical digits\"\"\"
+    return re.sub(r'\d+', '', text)
+
+def remove_extra_spaces(text):
+    \"\"\"Remove extra whitespace characters\"\"\"
+    return ' '.join(text.split())
+
+def remove_accents(text):
+    \"\"\"Remove accent characters\"\"\"
+    return unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('utf-8')
+
+def expand_contractions(text):
+    \"\"\"Expand common English contractions\"\"\"
+    contractions = {
+        "don't": "do not",
+        "can't": "cannot", 
+        "won't": "will not",
+        "i'm": "i am",
+        "you're": "you are",
+        "it's": "it is",
+        "that's": "that is",
+        "what's": "what is",
+        "where's": "where is",
+        "there's": "there is",
+        "who's": "who is",
+        "how's": "how is"
+    }
+    for contraction, expansion in contractions.items():
+        text = text.replace(contraction, expansion)
+    return text
+
+def advanced_cleaning(text):
+    \"\"\"Comprehensive text cleaning pipeline\"\"\"
+    # Convert to lowercase
+    text = text.lower()
+    # Remove numbers
+    text = re.sub(r'\d+', '', text)
+    # Remove punctuation
+    text = text.translate(str.maketrans('', '', string.punctuation))
+    # Remove extra whitespace
+    text = ' '.join(text.split())
+    # Remove accents
+    text = unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('utf-8')
+    return text
+
+# Example usage
+sample_text = "Hello! I have 123 ideas and I'm REALLY excited!!!   "
+
+print("Original:", sample_text)
+print("Lowercase:", to_lowercase(sample_text))
+print("No Punctuation:", remove_punctuation(sample_text))
+print("No Numbers:", remove_numbers(sample_text))
+print("Clean Spaces:", remove_extra_spaces(sample_text))
+print("Advanced Cleaning:", advanced_cleaning(sample_text))
+
+# Output:
+# Original: Hello! I have 123 ideas and I'm REALLY excited!!!   
+# Lowercase: hello! i have 123 ideas and i'm really excited!!!   
+# No Punctuation: Hello I have 123 ideas and Im REALLY excited   
+# No Numbers: Hello! I have  ideas and I'm REALLY excited!!!   
+# Clean Spaces: Hello! I have 123 ideas and I'm REALLY excited!!!
+# Advanced Cleaning: hello i have ideas and im really excited
+""", language="python")
+
+    with tab3: 
+        st.link_button("Text Normalization Guide ↗", "https://www.analyticsvidhya.com/blog/2021/06/text-preprocessing-in-nlp-with-python-codes/")
+        st.link_button("Advanced NLP Preprocessing ↗", "https://www.geeksforgeeks.org/text-preprocessing-in-python-set-1/")
+        st.link_button("Unicode Normalization ↗", "https://towardsdatascience.com/text-normalization-for-natural-language-processing-nlp-70a314bfa646")
+        st.link_button("Regular Expressions Guide ↗", "https://docs.python.org/3/howto/regex.html")
+
+    st.link_button(
+        "🔗 View More Normalization Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/4_text_normalization"
+    )
 else:
     st.info("🚧 Module coming soon! Work in progress...")
 
