@@ -8,6 +8,9 @@ from utils.lemmatizer import single_lemmatizer, mul_lemmatizer
 from utils.stemming import porterStemmer, snowballStemmer, lancasterStemmer
 from utils.stopworder import stop_worder
 from utils.text_norm import lower_case, upper_case, capitalize_case
+
+from text_vectorization.bag_of_words import simple_bag_of_word
+from text_vectorization.bag_of_words import advance_bow
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
 nltk.data.path.append('./nltk_data')
@@ -759,6 +762,129 @@ print("Advanced Cleaning:", advanced_cleaning(sample_text))
 
     st.link_button(
         "🔗 View More Normalization Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/4_text_normalization"
+    )
+
+################################### Phase 2 ###################################
+elif phase == "Feature Extraction" and current_module == "Bag of Words":
+    st.subheader("📝 Text Input")
+    text = st.text_area(
+        "Enter your word below:",
+        "I love NLP and NLP, NLP is Love",
+        height=100  # Better example with context!
+    )
+
+    col1, = st.columns(1)
+    def bow_ui(column, bow_id):
+        with column:
+            bow_option = st.selectbox(
+                f"Select Vectorizer for Bag of Word {bow_id}",
+                ["Select...", "Using Simple BoW", "Using Advance BoW", "Advance Techniques"], 
+                index=0,
+                #key=f"lemm_{stem_id}"
+            )
+            #use_nltk = st.toggle("🔄 Use NLTK Fallback (better for verbs!)", key=f"nltk_{lemm_id}")
+            
+            if bow_option == "Select...":
+                st.info("Select a Bag of word technique to begin.")
+                return
+            
+            try:
+                if "Using Simple BoW" in bow_option:
+                    bow_vector = simple_bag_of_word(text)
+                    st.code(bow_vector, language="text")
+                elif "Using Advance BoW" in bow_option:
+                    advance_bow_vector = advance_bow(text)
+                    st.code(advance_bow_vector, language="text")
+                elif "Advance Techniques" in bow_option:
+                    st.markdown("""
+                    ### 🔬 Advance Techniques (In Upcoming Phases)
+
+                    This simulator is evolving beyond basic vectorization.  
+                    Soon, you'll be able to explore **deep learning-powered NLP** using:
+
+                    - **TensorFlow & PyTorch**: Custom embeddings, attention mechanisms, and model introspection
+                    - **Transformers**: Contextual tokenization, BERT-style encodings, and sentence-level semantics
+                    - **Interactive Simulations**: Visualize how models interpret meaning, rank relevance, and adapt to fine-tuning
+
+                    This isn't just a learning hub — it's a playground for experimentation.  
+                    Stay tuned for modules that let you simulate, compare, and tweak real NLP pipelines.
+                    """)
+
+
+                
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+    bow_ui(col1, "-")
+
+    # ... tabs ...
+    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 BoW other sources"])
+
+    with tab1:
+        st.markdown("""
+        ### 🔹 Bag of Words (BoW)
+        **Bag of Words** is a foundational technique in NLP that converts text into numerical vectors by counting word occurrences.
+        - Ignores grammar and word order
+        - Treats each word as a separate feature
+        - Simple, fast, and effective for many tasks
+                    
+        #### Example:
+        Texts:  
+        - "NLP is love"  
+        - "NLP is important"
+
+        Vocabulary: ['nlp', 'is', 'love', 'important']  
+        Vectors:  
+        - [1, 1, 1, 0]  
+        - [1, 1, 0, 1]
+
+        #### BoW vs Advanced Techniques:
+        | Technique | Context Awareness | Dimensionality | Interpretability | Use Case |
+        |----------|-------------------|----------------|------------------|----------|
+        | BoW | ❌ No | High | ✅ Easy | Quick prototyping |
+        | TF-IDF | ❌ No | High | ✅ Easy | Keyword extraction |
+        | Embeddings | ✅ Yes | Low | ❌ Hard | Deep NLP models |
+
+        **Tip**: Use BoW for fast baselines and interpretable models. Upgrade to embeddings for semantic tasks!
+        """)
+
+    with tab2:
+        st.code("""
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Creating an object count vectorization
+vectorizer = CountVectorizer()
+                
+corpus = [
+    "Dog is Pet Animal and Dog is Loyal",
+    "Cat and Dog are both loyal Animal"   
+    ]
+
+bow_matrix = vectorizer.fit_transform(corpus)
+features = vectorizer.get_feature_names_out()
+
+print("Features:", list(features))
+print()
+
+for i, sentence in enumerate(corpus):
+    vector = bow_matrix[i].toarray()[0]
+    print(f"{sentence}: {list(vector)}")
+                
+### Output
+Features: ['and' 'animal' 'are' 'both' 'cat' 'dog' 'is' 'loyal' 'pet']
+Dog is Pet Animal and Dog is Loyal: [1, 1, 0, 0, 0, 2, 2, 1, 1]
+Cat and Dog are both loyal Animal: [1, 1, 1, 1, 1, 1, 0, 1, 0]
+
+
+""", language="python")
+
+    with tab3: 
+        st.link_button("BoW Sklearn Explained ↗", "https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction")
+        st.link_button("BoW Explained ↗", "https://www.mygreatlearning.com/blog/bag-of-words/")
+        
+
+    st.link_button(
+        "🔗 View More Bag of Word Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_2_text_vectorization/1_bag_of_words"
     )
 else:
     st.info("🚧 Module coming soon! Work in progress...")
