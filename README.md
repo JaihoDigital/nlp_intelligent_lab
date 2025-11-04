@@ -105,14 +105,16 @@ Developed by **Arshvir**, NLP Lab is designed for students, developers, and rese
 | **Backend** | Python, C++, Flask |
 | **Core Libraries** | NLTK, spaCy, Transformers, Scikit-learn, TensorFlow, PyTorch |
 | **Deployment** | GitHub, Huggingface Spaces, Streamlit Cloud, Render|
-| **Version** | 1.5.1 |
+| **Version** | 2.1 |
 
 ---
 
 ## 👨‍💻 Developed By
 
 **Arshvir** 
-*Machine Learning Engineer | Computer Programmer* 
+*Indian | Machine Learning Engineer | Computer Programmer*
+**Slavic Boston**
+- *Russian | NLP Engineer | Problem Solver* 
 <!--*AI & NLP Enthusiast | Machine Learning Developer | Research-driven Mindset*-->
 
 ---
