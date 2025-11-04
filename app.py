@@ -809,6 +809,7 @@ elif phase == "Feature Extraction" and current_module == "Bag of Words":
                     This isn't just a learning hub — it's a playground for experimentation.  
                     Stay tuned for modules that let you simulate, compare, and tweak real NLP pipelines.
                     """)
+                
 
 
                 
@@ -818,7 +819,7 @@ elif phase == "Feature Extraction" and current_module == "Bag of Words":
     bow_ui(col1, "-")
 
     # ... tabs ...
-    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 BoW other sources"])
+    tab1, tab2, tab3, tab4 = st.tabs(["📘 Concept", "💻 Code", "🔗 BoW other sources", "📝 Notes"])
 
     with tab1:
         st.markdown("""
@@ -882,10 +883,24 @@ Cat and Dog are both loyal Animal: [1, 1, 1, 1, 1, 1, 0, 1, 0]
         st.link_button("BoW Sklearn Explained ↗", "https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction")
         st.link_button("BoW Explained ↗", "https://www.mygreatlearning.com/blog/bag-of-words/")
         
-
     st.link_button(
         "🔗 View More Bag of Word Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_2_text_vectorization/1_bag_of_words"
     )
+
+    with tab4:
+        st.markdown("""
+    ### 📘 Complete Theory Notes
+
+    **What is Text Vectorization** [Learn More](#)
+                    
+    #### Techniques Covered:
+    - **Bag of Words (BoW)**: [Learn More](#)
+    - **TF-IDF**: [Learn More](#)
+    - **Embeddings**: [Learn More](#)
+
+    These techniques form the foundation for NLP pipelines, from sentiment analysis to search engines.
+    """)
+
 else:
     st.info("🚧 Module coming soon! Work in progress...")
 
