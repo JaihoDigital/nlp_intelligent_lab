@@ -11,6 +11,7 @@ from utils.text_norm import lower_case, upper_case, capitalize_case
 
 from text_vectorization.bag_of_words import simple_bag_of_word
 from text_vectorization.bag_of_words import advance_bow
+from text_vectorization.tfidf import simple_tf_idf, advance_tf_idf
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
 nltk.data.path.append('./nltk_data')
@@ -765,6 +766,7 @@ print("Advanced Cleaning:", advanced_cleaning(sample_text))
     )
 
 ################################### Phase 2 ###################################
+## Bags of Words
 elif phase == "Feature Extraction" and current_module == "Bag of Words":
     st.subheader("📝 Text Input")
     text = st.text_area(
@@ -900,6 +902,137 @@ Cat and Dog are both loyal Animal: [1, 1, 1, 1, 1, 1, 0, 1, 0]
 
     These techniques form the foundation for NLP pipelines, from sentiment analysis to search engines.
     """)
+
+## TF-IDF
+elif phase == "Feature Extraction" and current_module == "TF-IDF":
+    st.subheader("📝 Text Input")
+    text = st.text_area(
+        "Enter your word below:",
+        "NLP is amazing, NLP is Love",
+        height=100  # Better example with context!
+    )
+
+    col1, = st.columns(1)
+    def tfidf_ui(column, tfidf_id):
+        with column:
+            tfidf_option = st.selectbox(
+                f"Select Vectorizer for Bag of Word {tfidf_id}",
+                ["Select...", "Using Simple TF-IDF", "Using Advance TF-IDF"], 
+                index=0,
+                #key=f"lemm_{stem_id}"
+            )
+            #use_nltk = st.toggle("🔄 Use NLTK Fallback (better for verbs!)", key=f"nltk_{lemm_id}")
+            
+            if tfidf_option == "Select...":
+                st.info("Select a TFIDF vectorizer to begin.")
+                return
+            
+            try:
+                if "Using Simple TF-IDF" in tfidf_option:
+                    tfidf_vector = simple_tf_idf(text)
+                    st.code(tfidf_vector, language="text")
+                elif "Using Advance TF-IDF" in tfidf_option:
+                    advance_tfidf_vector = advance_tf_idf(text)
+                    st.code(advance_tfidf_vector, language="text")
+                
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+    tfidf_ui(col1, "-")
+
+    # ... tabs ...
+    tab1, tab2, tab3, tab4 = st.tabs(["📘 Concept", "💻 Code", "🔗 TF-IDF other sources", "📝 Notes"])
+
+    with tab1:
+        st.markdown("""
+        ### 🔹 TF-IDF (Term Frequency-Inverse Document Frequency)
+        **TF-IDF** is an advanced text vectorization technique that measures word importance by considering both frequency and rarity across documents.
+        - **TF**: How often a word appears in a document (like BoW)
+        - **IDF**: How rare/important a word is across all documents
+        - **TF-IDF**: TF × IDF - balances frequency with uniqueness
+                    
+        #### Example:
+        Texts:  
+        - "NLP is love"  
+        - "NLP is important"
+
+        Vocabulary: ['nlp', 'is', 'love', 'important']  
+        TF-IDF Vectors:  
+        - [0.40, 0.40, 0.81, 0.00]  (love is unique to doc1)  
+        - [0.40, 0.40, 0.00, 0.81]  (important is unique to doc2)
+
+        #### TF-IDF vs Other Techniques:
+        | Technique | Context Awareness | Common Words | Rare Words | Use Case |
+        |----------|-------------------|--------------|------------|----------|
+        | BoW | ❌ No | ✅ High weight | ✅ High weight | Quick prototypes |
+        | **TF-IDF** | ❌ No | ❌ Penalized | ✅ Boosted | Search, classification |
+        | Embeddings | ✅ Yes | ✅ Contextual | ✅ Contextual | Deep NLP tasks |
+
+        **Tip**: Use TF-IDF when you want to emphasize unique, important words over common ones!
+        """)
+
+    with tab2:
+        st.code("""
+    from sklearn.feature_extraction.text import TfidfVectorizer
+
+    # Creating TF-IDF vectorizer
+    vectorizer = TfidfVectorizer()
+                    
+    corpus = [
+        "Dog is Pet Animal and Dog is Loyal",
+        "Cat and Dog are both loyal Animal"   
+    ]
+
+    tfidf_matrix = vectorizer.fit_transform(corpus)
+    features = vectorizer.get_feature_names_out()
+
+    print("Features:", list(features))
+    print()
+
+    for i, sentence in enumerate(corpus):
+        vector = tfidf_matrix[i].toarray()[0]
+        # Format to 2 decimal places for readability
+        formatted_vector = [round(score, 2) for score in vector]
+        print(f"{sentence}: {formatted_vector}")
+                    
+    ### Output
+    Features: ['and', 'animal', 'are', 'both', 'cat', 'dog', 'is', 'loyal', 'pet']
+
+    Dog is Pet Animal and Dog is Loyal: 
+    [0.28, 0.28, 0.00, 0.00, 0.00, 0.56, 0.56, 0.28, 0.42]
+
+    Cat and Dog are both loyal Animal: 
+    [0.31, 0.31, 0.44, 0.44, 0.44, 0.31, 0.00, 0.31, 0.00]
+
+    ### Interpretation:
+    - 'dog' appears in both docs → lower scores (0.56, 0.31)
+    - 'is' only in doc1 → higher score (0.56)  
+    - 'cat' only in doc2 → higher score (0.44)
+    - 'pet' only in doc1 → higher score (0.42)
+    """, language="python")
+
+    with tab3: 
+        st.link_button("TF-IDF Sklearn Documentation ↗", "https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html")
+        st.link_button("TF-IDF Explained ↗", "https://www.geeksforgeeks.org/machine-learning/understanding-tf-idf-term-frequency-inverse-document-frequency/")
+        st.link_button("TF-IDF Mathematical Details ↗", "https://en.wikipedia.org/wiki/Tf–idf")
+
+    with tab4:
+        st.markdown("""
+    ### 📘 Complete Theory Notes
+
+    **What is Text Vectorization** [Learn More](#)
+                    
+    #### Techniques Covered:
+    - **Bag of Words (BoW)**: [Learn More](#)
+    - **TF-IDF**: [Learn More](#)
+    - **Embeddings**: [Learn More](#)
+
+    These techniques form the foundation for NLP pipelines, from sentiment analysis to search engines.
+    """)
+        
+    st.link_button(
+        "🔗 View More TFIDF vectorizer on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_2_text_vectorization/2_tf_idf"
+    )
 
 else:
     st.info("🚧 Module coming soon! Work in progress...")
