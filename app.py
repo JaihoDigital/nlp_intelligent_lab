@@ -12,6 +12,8 @@ from utils.text_norm import lower_case, upper_case, capitalize_case
 from text_vectorization.bag_of_words import simple_bag_of_word
 from text_vectorization.bag_of_words import advance_bow
 from text_vectorization.tfidf import simple_tf_idf, advance_tf_idf
+
+from syntax_parsing.pos_tagging import statistical_pos_tag, neural_pos_tagger
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
 nltk.data.path.append('./nltk_data')
@@ -1033,6 +1035,181 @@ elif phase == "Feature Extraction" and current_module == "TF-IDF":
     st.link_button(
         "🔗 View More TFIDF vectorizer on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_2_text_vectorization/2_tf_idf"
     )
+
+################### Syntax and Parsing ###################
+## POS Tagging
+elif phase == "Syntax & Parsing" and current_module == "POS Tagging":
+    st.subheader("📝 Text Input")
+    text = st.text_area(
+        "Enter your word below:",
+        "The quick brown fox jumps over lazy dog",
+        height=100  # Better example with context!
+    )
+    st.info("Spacy POS Tagger is more accurate than NLTK POS Tagger")
+    col1, = st.columns(1)
+    def pos_ui(column, pos_id):
+        with column:
+            pos_option = st.selectbox(
+                
+                f"Select Tagger for PoS {pos_id}",
+                ["Select...", "Statistical PoS Tagger", "Neural PoS Tagger", "Tagger Types"], 
+                index=0,
+                #key=f"lemm_{stem_id}"
+            )
+            #use_nltk = st.toggle("🔄 Use NLTK Fallback (better for verbs!)", key=f"nltk_{lemm_id}")
+            
+            if pos_option == "Select...":
+                st.info("Select a PoS tagger technique to begin.")
+                return
+            
+            try:
+                if "Statistical PoS Tagger" in pos_option:
+                    spos_tagger = statistical_pos_tag(text)
+                    st.code(spos_tagger, language="text")
+                elif "Neural PoS Tagger" in pos_option:
+                    npos_tagger = neural_pos_tagger(text)
+                    st.code(npos_tagger, language="text")
+                elif "Tagger Types" in pos_option:
+                    st.markdown("""
+                    ### 🔬 Tagger Types:
+                    - Rule-based POS Tagging
+                    - Statistical POS Tagging
+                    - Neural POS Tagging
+                    """)
+                   
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+    pos_ui(col1, "-")
+
+    # ... tabs ...
+    tab1, tab2, tab3, tab4 = st.tabs(["📘 Concept", "💻 Code", "🔗 PoS Resources", "📝 Notes"])
+
+    with tab1:
+        st.markdown("""
+        ### 🔹 Part-of-Speech (PoS) Tagging
+        **Part-of-Speech Tagging** is the process of marking words in a text as corresponding to particular parts of speech (nouns, verbs, adjectives, etc.) based on both definition and context.
+
+        #### Key PoS Tags:
+        | Tag | Meaning | Example |
+        |-----|---------|---------|
+        | NOUN | Noun | `cat`, `London`, `love` |
+        | VERB | Verb | `run`, `is`, `think` |
+        | ADJ | Adjective | `quick`, `beautiful` |
+        | ADV | Adverb | `quickly`, `very` |
+        | DET | Determiner | `the`, `a`, `this` |
+        | ADP | Adposition | `in`, `on`, `at` |
+        | PRON | Pronoun | `he`, `she`, `it` |
+        | CONJ | Conjunction | `and`, `but`, `or` |
+
+        #### Applications:
+        - ✅ **Grammar checking** and proofreading
+        - ✅ **Information extraction** (finding entities)
+        - ✅ **Question answering** systems
+        - ✅ **Speech recognition** and synthesis
+        - ✅ **Machine translation**
+
+        #### PoS Tagging Approaches:
+        | Method | Accuracy | Speed | Use Case |
+        |--------|----------|-------|----------|
+        | Rule-based | Medium | Fast | Limited domains |
+        | Statistical | High | Medium | General purpose |
+        | Neural | Very High | Slow | High-accuracy needs |
+
+        **Tip**: For most applications, statistical taggers (like NLTK) offer the best balance of accuracy and speed!
+        """)
+
+    with tab2:
+        st.code("""
+    # Method 1: Using NLTK
+    import nltk
+    from nltk import word_tokenize, pos_tag
+
+    def nltk_pos_tagger(text):
+        tokens = word_tokenize(text.lower())
+        return pos_tag(tokens)
+
+    text = "The quick brown fox jumps over the lazy dog"
+    result = nltk_pos_tagger(text)
+    print("NLTK PoS Tags:")
+    for word, tag in result:
+        print(f"{word:8} -> {tag}")
+
+    # Method 2: Using spaCy (Neural)
+    import spacy
+
+    def spacy_pos_tagger(text):
+        nlp = spacy.load("en_core_web_sm")
+        doc = nlp(text.lower())
+        return [(token.text, token.pos_) for token in doc]
+
+    text = "The quick brown fox jumps over the lazy dog"
+    result = spacy_pos_tagger(text)
+    print("\\nspaCy PoS Tags:")
+    for word, tag in result:
+        print(f"{word:8} -> {tag}")
+
+    ### Output Example:
+    NLTK PoS Tags:
+    the       -> DT
+    quick     -> JJ
+    brown     -> JJ
+    fox       -> NN
+    jumps     -> VBZ
+    over      -> IN
+    the       -> DT
+    lazy      -> JJ
+    dog       -> NN
+
+    spaCy PoS Tags:
+    the       -> DET
+    quick     -> ADJ
+    brown     -> ADJ
+    fox       -> NOUN
+    jumps     -> VERB
+    over      -> ADP
+    the       -> DET
+    lazy      -> ADJ
+    dog       -> NOUN
+    """, language="python")
+
+    with tab3: 
+        st.link_button("NLTK PoS Tagging Documentation ↗", "https://www.nltk.org/book/ch05.html")
+        st.link_button("spaCy Linguistic Features ↗", "https://spacy.io/usage/linguistic-features")
+        st.link_button("Universal PoS Tags ↗", "https://universaldependencies.org/u/pos/")
+        
+    st.link_button(
+        "🔗 View PoS Tagging Code on GitHub ↗️", 
+        "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_3_syntax_and_parsing/1_pos_tagging"
+    )
+
+    with tab4:
+        st.markdown("""
+        ### 📘 Complete PoS Tagging Notes
+
+        #### Common PoS Tagging Challenges:
+        - **Ambiguity**: Words like "run" can be noun or verb
+        - **Unknown words**: Handling new/unseen vocabulary
+        - **Context dependence**: "Time flies" vs "Fruit flies"
+
+        #### Tagging Standards:
+        - **Penn Treebank**: 36 tags (used by NLTK)
+        - **Universal Dependencies**: 17 universal tags (used by spaCy)
+        - **Brown Corpus**: 87 tags
+
+        #### Preprocessing Tips:
+        1. **Tokenize** before tagging
+        2. Consider **lowercasing** for better accuracy
+        3. Handle **punctuation** appropriately
+        4. Use **sentence segmentation** for long texts
+
+        #### Advanced Topics:
+        - **Dependency parsing**: Relationships between words
+        - **Named Entity Recognition (NER)**: Finding people, places, organizations
+        - **Chunking**: Grouping adjacent words into phrases
+
+        **Remember**: PoS tagging is the foundation for most advanced NLP tasks!
+        """)
 
 else:
     st.info("🚧 Module coming soon! Work in progress...")
