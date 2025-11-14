@@ -14,6 +14,8 @@ from text_vectorization.bag_of_words import advance_bow
 from text_vectorization.tfidf import simple_tf_idf, advance_tf_idf
 
 from syntax_parsing.pos_tagging import statistical_pos_tag, neural_pos_tagger
+from syntax_parsing.dependency_parsing import dep_parsing, visualize_deps
+
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
 nltk.data.path.append('./nltk_data')
@@ -1210,6 +1212,92 @@ elif phase == "Syntax & Parsing" and current_module == "POS Tagging":
 
         **Remember**: PoS tagging is the foundation for most advanced NLP tasks!
         """)
+
+## Dependency Parsing
+elif phase == "Syntax & Parsing" and current_module == "Dependency Parsing":
+    st.subheader("📝 Text Input")
+    text = st.text_area(
+        "Enter your word below:",
+        "The quick brown fox jumps over lazy dog.",
+        height=100 
+    )
+    col1, = st.columns(1)
+    def dep_ui(column, dep_id):
+        with column:
+            dep_option = st.selectbox(
+                
+                f"Select Parser for Dependency Parsing {dep_id}",
+                ["Select...", "Textual Parser", "Visualize Parser"], 
+                index=0,
+                #key=f"lemm_{stem_id}"
+            )
+            if dep_option == "Select...":
+                st.info("Select a Parser technique to begin.")
+                return
+            
+            try:
+                if "Textual Parser" in dep_option:
+                    text_dep_parser = dep_parsing(text)
+                    st.code(text_dep_parser, language="text")
+                elif "Visualize Parser" in dep_option:
+                    dep_html = visualize_deps(text)
+                    st.components.v1.html(dep_html, height=300, scrolling=True)
+ 
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+    dep_ui(col1, "-")
+
+    # ... tabs ...
+    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 PoS Resources"])
+
+    with tab1:
+        st.markdown("""
+        ### 🔹 Dependency Parser
+        **Dependency Parsing** is the process of analyzing a sentence's grammatical structure by establishing relashionsip ("dependencies") between words.
+
+        #### Applications:
+        - ✅ **NER**
+        - ✅ **Sentiment Analysis**
+        - ✅ **Question answering** systems
+        - ✅ **Text Generation**
+        - ✅ **Machine translation**
+
+        """)
+
+    with tab2:
+        st.code("""
+    # Using spaCy 
+    import spacy
+    nlp = spacy.load("en_core_web_sm")
+    sentence = "The quick brown fox jumps over the lazy dog."
+    doc = nlp(sentence)
+    for tokens in doc:
+        print(f"{tokens.text:10} <----{tokens.dep_:10} ----{tokens.head.text}")
+                
+    ### Output Example:
+    The        <----det        ----fox
+    quick      <----amod       ----fox
+    brown      <----amod       ----fox
+    fox        <----nsubj      ----jumps
+    jumps      <----ROOT       ----jumps
+    over       <----prep       ----jumps
+    the        <----det        ----dog
+    lazy       <----amod       ----dog
+    dog        <----pobj       ----over
+    .          <----punct      ----jumps
+
+    """, language="python")
+
+    with tab3: 
+        st.link_button("Dependency Theory ↗", "https://www.geeksforgeeks.org/compiler-design/constituency-parsing-and-dependency-parsing/")
+        st.link_button("Spacy Dependency Docs ↗", "https://spacy.io/api/dependencyparser")
+        
+    st.link_button(
+        "🔗 View Dependency Parsing Code on GitHub ↗️", 
+        "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_3_syntax_and_parsing/2_dependency_parsing"
+    )
+
 
 else:
     st.info("🚧 Module coming soon! Work in progress...")
