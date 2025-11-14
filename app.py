@@ -1249,7 +1249,7 @@ elif phase == "Syntax & Parsing" and current_module == "Dependency Parsing":
     dep_ui(col1, "-")
 
     # ... tabs ...
-    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 PoS Resources"])
+    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 Dependency Parser Resources"])
 
     with tab1:
         st.markdown("""
