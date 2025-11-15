@@ -1297,7 +1297,36 @@ elif phase == "Syntax & Parsing" and current_module == "Dependency Parsing":
         "🔗 View Dependency Parsing Code on GitHub ↗️", 
         "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_3_syntax_and_parsing/2_dependency_parsing"
     )
+## Constituency Parsing
+elif phase == "Syntax & Parsing" and current_module == "Constituency Parsing":
+    col1, = st.columns(1)
+    def cons_ui(column, cons_id):
+        st.markdown("""
+        ### 🔹 Constituency Parser
+        **Constituency Parsing** analyzes text or sentence by breaking down into hierachy of nested sub-phrases or consitituents, like noun phrases, vern phrases, etc.
+        """)
 
+        st.code("""
+        import stanza
+                
+        # Download the model (only needed once)
+        # stanza.download('en')
+        # Initialize the pipeline
+        
+        nlp = stanza.Pipeline('en', processors='tokenize,pos,constituency')
+        sentence = "The quick brown fox jumps over the lazy dog."
+        doc = nlp(sentence)
+
+        for sentence in doc.sentences:
+            print(sentence.constituency)
+        
+        """, language="python")
+        
+        st.link_button("🔗 View Constituency Parsing Code on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_3_syntax_and_parsing/3_constituency_parsing")
+        st.link_button("Constituency Theory ↗", "https://www.geeksforgeeks.org/compiler-design/constituency-parsing-and-dependency-parsing/")
+        st.link_button("Stanza Constituency Docs ↗", "https://stanfordnlp.github.io/stanza/constituency.html")
+
+    cons_ui(col1, "-")
 
 else:
     st.info("🚧 Module coming soon! Work in progress...")
