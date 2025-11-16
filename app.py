@@ -16,6 +16,8 @@ from text_vectorization.tfidf import simple_tf_idf, advance_tf_idf
 from syntax_parsing.pos_tagging import statistical_pos_tag, neural_pos_tagger
 from syntax_parsing.dependency_parsing import dep_parsing, visualize_deps
 
+from sematic_analysis.ner import ner_analysis
+
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
 nltk.data.path.append('./nltk_data')
@@ -769,7 +771,7 @@ print("Advanced Cleaning:", advanced_cleaning(sample_text))
         "🔗 View More Normalization Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/4_text_normalization"
     )
 
-################################### Phase 2 ###################################
+################################### Phase 1b ###################################
 ## Bags of Words
 elif phase == "Feature Extraction" and current_module == "Bag of Words":
     st.subheader("📝 Text Input")
@@ -1327,6 +1329,136 @@ elif phase == "Syntax & Parsing" and current_module == "Constituency Parsing":
         st.link_button("Stanza Constituency Docs ↗", "https://stanfordnlp.github.io/stanza/constituency.html")
 
     cons_ui(col1, "-")
+
+################################### Phase 2 ###################################
+## NER
+elif phase == "Semantic Analysis" and current_module == "NER":
+    st.subheader("📝 Text Input")
+    text = st.text_area(
+        "Enter your word below:",
+        "Barack Obama was born in Hawaii and became President of the United States in 2009.",
+        height=100
+    )
+
+    col1, = st.columns(1)
+    
+    def ner_ui(column, ner_id):
+        with column:
+            # Direct NER analysis without selection
+            try:
+                df, html_output = ner_analysis(text)
+                
+                # Create tabs for different views
+                tab1, tab2 = st.tabs(["📊 Data Table", "🔍 Visualization"])
+                
+                with tab1:
+                    st.subheader("Named Entities")
+                    st.dataframe(df)
+                    
+                    # Show some statistics
+                    st.subheader("📈 Statistics")
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Total Entities", len(df))
+                    with col2:
+                        st.metric("Entity Types", df['type'].nunique())
+                    with col3:
+                        st.metric("Unique Entities", df['text'].nunique())
+                
+                with tab2:
+                    st.subheader("Named Entities Visualization")
+                    st.components.v1.html(html_output, height=500, scrolling=True)
+            
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+    ner_ui(col1, "-")
+
+    # ... tabs ...
+    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 BoW other sources"])
+
+    with tab1:
+                st.markdown("""
+                ### 🔹 Named Entity Recognition (NER)
+                **Named Entity Recognition** is an NLP technique that identifies and classifies named entities in text into predefined categories.
+                - Identifies real-world objects like people, places, organizations
+                - Classifies entities into specific types
+                - Essential for information extraction and knowledge graphs
+                            
+                #### Common Entity Types:
+                | Entity Type | Description | Example |
+                |-------------|-------------|---------|
+                | **PERSON** | People, including fictional | *Barack Obama* |
+                | **GPE** | Countries, cities, states | *Hawaii, United States* |
+                | **ORG** | Organizations, companies | *Google, NASA* |
+                | **DATE** | Dates, time periods | *2009, yesterday* |
+                | **MONEY** | Monetary values | *$50, 100 euros* |
+                | **PERCENT** | Percentages | *25%, 100 percent* |
+                | **TIME** | Times smaller than a day | *5:30 PM, two hours* |
+
+                #### NER Applications:
+                - 📊 **Information Extraction**: Extract structured data from unstructured text
+                - 🔍 **Search Enhancement**: Improve search results with entity recognition
+                - 📈 **Business Intelligence**: Analyze customer feedback for mentioned entities
+                - 🏥 **Medical NLP**: Identify medical terms, drugs, and conditions
+
+                **Tip**: NER is the first step towards building knowledge graphs and intelligent search systems!
+                """)
+
+    with tab2:
+        st.code("""
+import spacy
+import pandas as pd
+from spacy import displacy
+
+# Load the English model
+nlp = spacy.load("en_core_web_sm")
+
+def ner_analysis(text):
+# Process the text
+doc = nlp(text)
+
+# Extract entities
+entities = [(ent.text, ent.label_, ent.lemma_) for ent in doc.ents]
+
+# Create DataFrame
+df = pd.DataFrame(entities, columns=['Entity', 'Type', 'Lemma'])
+
+# Generate visualization
+html_output = displacy.render(doc, style="ent", jupyter=False)
+
+return df, html_output
+
+# Example usage
+text = "Barack Obama was born in Hawaii and became President of the United States in 2009."
+df, visualization = ner_analysis(text)
+
+print("Named Entities Found:")
+print(df)
+
+# To display visualization in Jupyter:
+# displacy.render(doc, style="ent", jupyter=True)
+
+### Output:
+# Named Entities Found:
+#           Entity   Type        Lemma
+# 0   Barack Obama  PERSON  Barack Obama
+# 1         Hawaii     GPE        Hawaii
+# 2  United States     GPE  United States
+# 3           2009    DATE          2009
+""", language="python")
+
+    with tab3: 
+        st.link_button("spaCy NER Documentation ↗", "https://spacy.io/usage/linguistic-features#named-entities")
+        st.link_button("Stanford NER ↗", "https://nlp.stanford.edu/software/CRF-NER.html")
+        st.link_button("NER Explained - Towards Data Science ↗", "https://towardsdatascience.com/named-entity-recognition-with-nltk-and-spacy-8c4a7d88e7da")
+        st.link_button("spaCy Models ↗", "https://spacy.io/models")
+        
+    st.link_button(
+        "🔗 View More NER Techniques on GitHub ↗️", 
+        "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_4_named_entity_recognition"
+    )
+
 
 else:
     st.info("🚧 Module coming soon! Work in progress...")
