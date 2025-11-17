@@ -14,6 +14,7 @@ COPY config.py ./
 COPY utils/ ./utils/
 COPY text_vectorization/ ./text_vectorization/
 COPY syntax_parsing/ ./syntax_parsing/
+COPY sematic_analysis/ ./sematic_analysis/
 
 RUN pip3 install -r requirements.txt
 
