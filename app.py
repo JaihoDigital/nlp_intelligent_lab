@@ -17,6 +17,7 @@ from syntax_parsing.pos_tagging import statistical_pos_tag, neural_pos_tagger
 from syntax_parsing.dependency_parsing import dep_parsing, visualize_deps
 
 from sematic_analysis.ner import ner_analysis
+from sematic_analysis.wsd import word_sense_disambiguation
 
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
@@ -1457,6 +1458,91 @@ print(df)
     st.link_button(
         "🔗 View More NER Techniques on GitHub ↗️", 
         "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_4_named_entity_recognition"
+    )
+## WSD
+elif phase == "Semantic Analysis" and current_module == "Word Sense Disambiguation":
+    st.subheader("📝 Text Input")
+
+    text = st.text_area(
+        "Enter your word below:",
+        "I deposited money in the bank.",
+        #sentence1 = "I deposited money in the bank."
+        #sentence2 = "He sat on the river bank and watched the sunset."
+        height=100 
+    )
+
+    target_word = st.text_input(
+        "Enter the target word to disambiguate:",
+        "bank"
+    )
+
+    col1, = st.columns(1)
+    
+    def wsd_ui(column, wsd_id):
+        with column:
+            #if wsd_option == "Select...":
+            #    st.info("Please select an option to proceed.")
+            #    return
+            
+            try:
+                sense, definition = word_sense_disambiguation(text, target_word)
+                if sense:
+                    st.code(f"Sense: {sense}")
+                    st.code(f"Definition: {definition}")
+                else:
+                    st.warning("No suitable sense found.")
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+    wsd_ui(col1, "-")
+
+    # ... tabs ...
+    tab1, tab2, tab3 = st.tabs(["📘 Concept", "💻 Code", "🔗 WSD Resources"])
+
+    with tab1:
+        st.markdown("""
+        ### 🔹 Word Sense Disambiguation (WSD)
+        **WSD** is the process of identifying the correct meaning (sense) of a word based on its context in a sentence.
+
+        #### Why is WSD important?
+        - 🧠 **Improves accuracy** in NLP tasks
+        - 🔍 Helps in **machine translation**
+        - 🗄 Enhances **information retrieval**
+        - 💬 Better **text understanding** and **summarization**
+
+        #### Example:
+        - “I deposited money in the **bank**.” → *bank = financial institution*
+        - “He sat on the river **bank**.” → *bank = land beside a river*
+        """)
+
+    with tab2:
+        st.code("""
+    # Using NLTK's Lesk Algorithm
+from nltk.wsd import lesk
+from nltk.tokenize import word_tokenize
+
+sentence = "I went to the bank to deposit money."
+word = "bank"
+
+# Tokenize and apply Lesk
+words = word_tokenize(sentence)
+sense = lesk(words, word)
+
+print(f"Sense: {sense.name()}")
+print(f"Definition: {sense.definition()}")
+
+### Output Example:
+# Sense: bank.n01
+# Definition: a financial institution that accepts deposits and channels the money into lending activities
+    """, language="python")
+
+    with tab3: 
+        st.link_button("Lesk Algorithm - NLTK Documentation ↗", "https://www.nltk.org/howto/wsd.html")
+        st.link_button("WSD in detail ↗", "https://www.geeksforgeeks.org/machine-learning/word-sense-disambiguation-in-natural-language-processing/")
+        
+    st.link_button(
+        "🔗 View WSD Code on GitHub ↗️", 
+        "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_4_semantic_analysis/2_WSD"
     )
 
 
