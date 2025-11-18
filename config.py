@@ -3,7 +3,7 @@
 # ===============================
 
 APP_NAME = "NLP Intelligent Lab"
-VERSION = "4.2"
+VERSION = "4.3"
 AUTHOR = "Arshvir"
 DESCRIPTION = "An interactive NLP learning platform for text preprocessing, syntax parsing, and more."
 LICENSE = "Apache License 2.0"
