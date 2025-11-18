@@ -1545,6 +1545,25 @@ print(f"Definition: {sense.definition()}")
         "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_4_semantic_analysis/2_WSD"
     )
 
+## Coreference Resolution
+elif phase == "Semantic Analysis" and current_module == "Coreference Resolution":
+    col1, = st.columns(1)
+    def cr_ui(column, cr_id):
+        st.markdown("""
+        ### 🔹 Coreference Resolution
+        **Coreference Resolution** is the task of identifying when two or more expression in a document refers to the same entity.
+        """)
+
+        st.code("""
+        Example: "Steve Jobs founded Apple. He became the CEO."
+                 - "He" -> refers to -> "Steve Jobs"
+        """, language="python")
+        
+        st.link_button("🔗 View Coreference Resolution Code on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_4_semantic_analysis/3_coreference_resolution")
+        st.link_button("Coreference Resolution Theory ↗", "https://kaveeshabaddage.medium.com/introduction-to-coreference-resolution-in-nlp-e7d108cd5fae")
+
+    cr_ui(col1, "-")
+
 
 else:
     st.info("🚧 Module coming soon! Work in progress...")
