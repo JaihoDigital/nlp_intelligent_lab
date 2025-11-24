@@ -19,6 +19,8 @@ from syntax_parsing.dependency_parsing import dep_parsing, visualize_deps
 from sematic_analysis.ner import ner_analysis
 from sematic_analysis.wsd import word_sense_disambiguation
 
+from basic_ml_models_classification.spam_detection import spam_types
+
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
 nltk.data.path.append('./nltk_data')
@@ -1564,6 +1566,80 @@ elif phase == "Semantic Analysis" and current_module == "Coreference Resolution"
 
     cr_ui(col1, "-")
 
+###################### Phase 3 ############################################################
+###################### Basic ML Models & Classification ###################################
+## Text Classification
+elif phase == "Basic ML Models & Classification" and current_module == "Text Classification (Naive Bayes, SVM)":
+    col1, = st.columns(1)
+    def tc_ui(column, tc_id):
+        st.markdown("""
+        ### 🔹 Text Classification
+        **Coreference Resolution** is the task of identifying when two or more expression in a document refers to the same entity.
+        """)
+
+        st.code("""
+        Example: "Steve Jobs founded Apple. He became the CEO."
+                 - "He" -> refers to -> "Steve Jobs"
+        """, language="python")
+        
+        st.link_button("🔗 View Coreference Resolution Code on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_4_semantic_analysis/3_coreference_resolution")
+        st.link_button("Coreference Resolution Theory ↗", "https://kaveeshabaddage.medium.com/introduction-to-coreference-resolution-in-nlp-e7d108cd5fae")
+
+    tc_ui(col1, "-")
+
+## Sentiment Analysis
+elif phase == "Basic ML Models & Classification" and current_module == "Sentiment Analysis (basic)":
+    col1, = st.columns(1)
+    def sa_ui(column, sa_id):
+        st.markdown("""
+        ### 🔹 Sentiment Analysis
+        **Sentiment Analysis** is a popular task in natural language processing. The goal of sentiment analysis is to classify the text based on the mood or mentality expressed in the text, which can be positive negative, or neutral.
+        """)
+
+        st.code("""
+        Example: "Steve Jobs founded Apple. He became the CEO."
+                 - "He" -> refers to -> "Steve Jobs"
+        """, language="python")
+        
+        st.link_button("🔗 View Coreference Resolution Code on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_4_semantic_analysis/3_coreference_resolution")
+        st.link_button("Coreference Resolution Theory ↗", "https://kaveeshabaddage.medium.com/introduction-to-coreference-resolution-in-nlp-e7d108cd5fae")
+
+    sa_ui(col1, "-")
+
+## Spam Detection
+elif phase == "Basic ML Models & Classification" and current_module == "Spam Detection":
+    col1, = st.columns(1)
+    def sd_ui(column, sd_id):
+        st.markdown("""
+        ### 🔹 Spam Detection
+        **Spam Detection** in Machine Learning is the task of automatically identifying whether a message (email, SMS, comment, review, etc.) is spam (unwanted, harmful, irrelevant) or ham (legitimate).
+        - It is one of the most classic binary classification problems in ML.
+        - It's a classic example of a binary classification problem, where the goal is to label each incoming message as one of two categories:
+            - Class 0: Ham (the legitimate, desired message)
+            - Class 1: Spam (the unwanted message)
+        
+        **Work Flow**
+        *In this we are using Email Spam Detection*
+        - First Load the Dataset.
+        - Clean the Dataset.
+        - Convert labels using Label Encoder.
+        - Tokenize it.
+        - Lemmatize & Stopword.
+        - Implement Text Vectorization.
+        - Split into train test.
+        - Choose ML Algorithm: We choose Logistic Regression
+        - Fit the Model.
+        - Predict the Values.        
+        
+        **Below I have provide Email Spam Detection Code Link**
+        """)
+        st.dataframe(spam_types(), use_container_width=True)
+        
+        st.link_button("🔗 View Email Spam Detection Code on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/blob/main/14_nlp/nlp_projects/Spam_Email_Model.ipynb")
+        st.link_button("Spam Detection Theory ↗", "https://sist.sathyabama.ac.in/sist_naac/documents/1.3.4/1822-b.e-cse-batchno-320.pdf")
+        st.link_button("Supervised ML techniques ↗","https://github.com/avarshvir/Machine_Learning_Journey/tree/main/6_supervised_learning")
+
+    sd_ui(col1, "-")
 
 else:
     st.info("🚧 Module coming soon! Work in progress...")
