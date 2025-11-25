@@ -145,7 +145,7 @@ if phase == "Text Preprocessing" and current_module == "Steps in TP":
 - **Stopword Removal:** NLTK based or custom based.
 - **Stemming and Lemmatization:** Porter Stemmer, Snowball Stemmer, Lancaster Stemmer, Lemmatizer.
             """)
-    st.link_button("Text Preprocessing Notes ↗","#")
+    st.link_button("Text Preprocessing Notes ↗","https://jaiho-labs.onrender.com/pages/products_resources/learning_resources/Text%20Pre-Processing.pdf")
 
 elif phase == "Text Preprocessing" and current_module == "Tokenizer":
     st.subheader("📝 Text Input")
