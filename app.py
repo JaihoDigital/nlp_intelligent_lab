@@ -20,6 +20,7 @@ from sematic_analysis.ner import ner_analysis
 from sematic_analysis.wsd import word_sense_disambiguation
 
 from basic_ml_models_classification.spam_detection import spam_types
+from basic_ml_models_classification.email_spam_detection import predict_email
 
 from config import APP_NAME, VERSION, AUTHOR, ORG
 import nltk
@@ -81,7 +82,7 @@ st.markdown(f"### 📘 Current Phase: {phase}")
 modules_by_phase = {
     "Text Preprocessing": [
         "Steps in TP", "Tokenizer", "Lemmatization", "Stemming",
-        "Stopword Removal", "Text Normalization"
+        "Stopword Removal", "Text Normalization", "Text Preprocessing Notes"
     ],
     "Feature Extraction": [
         "Bag of Words", "TF-IDF", "Word Embedding"
@@ -773,6 +774,9 @@ print("Advanced Cleaning:", advanced_cleaning(sample_text))
     st.link_button(
         "🔗 View More Normalization Techniques on GitHub ↗️", "https://github.com/avarshvir/Machine_Learning_Journey/tree/main/14_nlp/14_1_text_preprocessing/4_text_normalization"
     )
+
+elif phase == "Text Preprocessing" and current_module == "Text Preprocessing Notes":
+    st.link_button("Notes", "https://jaiho-labs.onrender.com/pages/products_resources/learning_resources/Text%20Pre-Processing.pdf")
 
 ################################### Phase 1b ###################################
 ## Bags of Words
@@ -1608,6 +1612,23 @@ elif phase == "Basic ML Models & Classification" and current_module == "Sentimen
 
 ## Spam Detection
 elif phase == "Basic ML Models & Classification" and current_module == "Spam Detection":
+    st.subheader("📝 Text Input")
+
+    text = st.text_area(
+        "Enter your word below:",
+        "Dear user, You have won $5000 cash reward. Click here to claim.",
+        #sentence1 = "I deposited money in the bank."
+        #sentence2 = "He sat on the river bank and watched the sunset."
+        height=100 
+    )
+
+    result = predict_email(text)
+    if result == "Spam":
+        st.markdown("<p style='color:red; font-size:22px; font-weight:bold;'>Spam</p>", unsafe_allow_html=True)
+    else:
+        st.markdown("<p style='color:green; font-size:22px; font-weight:bold;'>Ham</p>", unsafe_allow_html=True)
+    
+
     col1, = st.columns(1)
     def sd_ui(column, sd_id):
         st.markdown("""
