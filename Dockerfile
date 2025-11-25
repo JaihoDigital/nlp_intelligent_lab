@@ -15,6 +15,7 @@ COPY utils/ ./utils/
 COPY text_vectorization/ ./text_vectorization/
 COPY syntax_parsing/ ./syntax_parsing/
 COPY sematic_analysis/ ./sematic_analysis/
+COPY basic_ml_models_classification/ ./basic_ml_models_classification/
 
 RUN pip3 install -r requirements.txt
 
